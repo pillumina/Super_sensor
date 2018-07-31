@@ -1,0 +1,4 @@
+#!/bin/bash
+
+python GridEye.py $para1 $para2
+python PIR.py $para1 $para2
