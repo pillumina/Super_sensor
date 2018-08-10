@@ -4,6 +4,7 @@ plt.style.use('ggplot')
 import os
 import re
 
+
 Dev1 = ['noone2min', 'static2min', 'walk2min', 'wave2min']
 Dev2 = ['noone2min', 'static2min', 'typing2min', 'walk2min', 'wave2min']
 Dev3 = ['noone2min', 'static2min', 'typing2min', 'walking2min', 'wave2min']
@@ -200,6 +201,7 @@ def slide_algo(arr, len_unit, slide_step, threshold):
     fn_arr = np.asarray(fn_list)
     result = max_vote(fn_arr)
     return (result, fn_arr)
+
 
 
 
