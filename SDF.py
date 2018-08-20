@@ -1,4 +1,12 @@
 import numpy as np
+from sklearn.model_selection import train_test_split
+
+
+def  remove_duplicate(arr):
+    arr_list = arr.tolist()
+    removed = list(set(arr_list))
+    rst_arr = np.asarray(removed)
+    return rst_arr
 
 def max_entropy_partition(data, number_of_symbols):
     """
@@ -29,6 +37,7 @@ def max_entropy_partition(data, number_of_symbols):
     data = data.flatten()
 
     # Sort and partition data:
+    # data = remove_duplicate(data)
     data = np.sort(data)
     len_data = np.float(len(data))
 
@@ -53,7 +62,7 @@ def max_entropy_partition(data, number_of_symbols):
 
     for ipart in range(1, npartitions + 1):
         partition[ipart - 1] = data[np.int_(np.floor(ipart * len_data / number_of_symbols) - 1)]
-
+    #
     return partition
 
 
@@ -163,6 +172,45 @@ def sdf_features(data, number_of_symbols, pi_matrix_flag=False):
 
 
 
+def sdf_test_features(data, lb, number_of_symbols, pi_matrix_flag=False):
+    """
+    Extract symbolic dynamic filtering features from time series data.
+    NOTE: Currently the number of states is set to the number of symbols.
+    Parameters
+    ----------
+    data : numpy array
+    number_of_symbols : integer
+        number of symbols for symbolic dynamic filtering method
+    pi_matrix_flag : Boolean
+        feature as vectorized morph matrix (default: False)?
+    Returns
+    -------
+    feature : numpy array
+    """
+    import numpy as np
+
+
+    # Generate partitions:
+    partition = max_entropy_partition(X_train, number_of_symbols)
+
+    # Generate symbols:
+    symbols = generate_symbol_sequence(X_test, partition)
+
+    # morph_matrix is the estimated Morph Matrix, and
+    # pvec is the eigenvector corresponding to the eigenvalue 1:
+    morph_matrix, pvec = analyze_symbol_sequence(symbols, number_of_symbols,
+                                                 pi_matrix_flag)
+
+    # Feature as vectorized morph matrix:
+    if pi_matrix_flag:
+        b = np.transpose(morph_matrix)
+        feature = b.flatten()
+    # Feature as state transition probability vector store:
+    else:
+        feature = pvec
+
+    return feature
+
 if __name__ == "__main__":
     data = np.array([0.82487374, 0.21834812, 0.60166418, 0.76465689, 0.44819955, 0.72335342, 0.8710113, 0.73258881, 0.97047932,
          0.5975058, 0.02474567, 0.38093561])
@@ -170,5 +218,5 @@ if __name__ == "__main__":
     feature = sdf_features(data, 4, False)
     print(feature)
 
-    
+
 

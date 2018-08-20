@@ -101,8 +101,8 @@ def plot_arr(arr, filename, dirname):
     if os.path.exists(dirname) == False:
         os.mkdir(dirname)
     save_path = os.path.join(cwd, dirname)
-    plt.savefig(os.path.join(save_path, filename))
-
+    # plt.savefig(os.path.join(save_path, filename))
+    plt.show()
 
 def z_score(arr):
     mean = np.mean(arr)
